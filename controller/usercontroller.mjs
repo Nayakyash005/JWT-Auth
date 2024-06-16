@@ -1,37 +1,36 @@
-import db from "pg";
+import pool from "../config/db.js";
 
-export const createUser = (name, email, password, callback) => {
+export const createUser = async (name, email, password) => {
+  const query =
+    "INSERT INTO users (name, email, password) VALUES ($1, $2, $3) RETURNING id";
+  const values = [name, email, password];
   try {
-    const responce = db.Query(
-      "insert into user(name,email,password) values($1,$2,$3) returning id",
-      [username, email, password]
-    );
-    console.log(responce.rows[0]);
-    return responce.rows[0];
+    const response = await pool.query(query, values);
+    return response.rows[0];
   } catch (error) {
-    console.log("error", error);
-    return error;
+    console.error("Database error:", error);
+    throw error;
   }
 };
 
-export const getUserbyEmail = (email) => {
+export const getUserbyEmail = async (email) => {
+  const query = "SELECT * FROM users WHERE email = $1";
   try {
-    const responce = db.Query("Select * from user where email = $1");
-    console.log(responce.rows);
-    return responce.rows[0];
+    const response = await pool.query(query, [email]);
+    return response.rows[0];
   } catch (error) {
-    console.log("error ", error);
-    return error;
+    console.error("Database error:", error);
+    throw error;
   }
 };
 
-export const getUserbyId = (id) => {
+export const getUserbyId = async (id) => {
+  const query = "SELECT id, name, email FROM users WHERE id = $1";
   try {
-    const result = db.Query("selec * from user where user = $1", [id]);
-    console.log(result.rows);
-    return result.rows[0];
+    const response = await pool.query(query, [id]);
+    return response.rows[0];
   } catch (error) {
-    console.log("error ", error);
-    return error;
+    console.error("Database error:", error);
+    throw error;
   }
 };

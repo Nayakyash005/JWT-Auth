@@ -1,18 +1,18 @@
-import pg from "pg";
+import pkg from "pg";
+const { Pool } = pkg;
 
-const db = new pg({
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
+const pool = new Pool({
+  connectionString:
+    "postgres://postgres.krnfgpmvvrvdvecqonsw:Mydp%23nayak09@aws-0-ap-south-1.pooler.supabase.com:6543/postgres",
 });
 
-db.connect((err) => {
-  if (err) {
-    console.error("Database connection failed:", err);
-    return;
-  }
+pool.on("connect", () => {
   console.log("Connected to the PostgreSQL server.");
 });
 
-module.exports = db;
+pool.on("error", (err) => {
+  console.error("Unexpected error on idle client", err);
+  process.exit(-1);
+});
+
+export default pool;
