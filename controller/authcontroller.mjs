@@ -40,7 +40,7 @@ export const login = async (req, res) => {
       return res.status(401).json({ message: "Invalid credentials" });
     }
 
-    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
+    const token = jwt.sign({ id: user.id }, "yash123", {
       expiresIn: "1h",
     });
     return res.json({ token });
@@ -53,8 +53,7 @@ export const login = async (req, res) => {
 };
 
 export const Profile = async (req, res) => {
-  const { id } = req.user; // assuming the user ID is decoded from JWT and available in req.user
-
+  const { id } = req.user; // Assuming the user ID is decoded from JWT and available in req.user
   if (!id) {
     return res.status(404).json({ message: "User not found" });
   }
@@ -63,7 +62,7 @@ export const Profile = async (req, res) => {
     const result = await getUserbyId(id);
     return res.json({ userProfile: result });
   } catch (error) {
-    console.error(error);
+    console.error("Error:", error);
     return res.status(500).json({ message: "Server error" });
   }
 };

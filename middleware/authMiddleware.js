@@ -2,21 +2,23 @@ import jwt from "jsonwebtoken";
 
 export const authenticationJWT = async (req, res, next) => {
   try {
-    const token = req.header("authoriation").replace("bearer", "");
-    if (!token) {
-      // in case any token are not provided
-      res.json("token not provided");
+    const authHeader = req.header("authorization");
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      return res.status(401).json({ message: "Token not provided" });
     }
+
+    const token = authHeader.replace("Bearer ", "");
+    console.log(token);
 
     jwt.verify(token, "yash123", (err, user) => {
       if (err) {
-        res.status(403).json("invaid token");
+        return res.status(403).json({ message: "Invalid token" });
       }
       req.user = user;
       next();
     });
   } catch (error) {
-    console.log("error");
-    res.status(500).json("INternal Server Error");
+    console.error("Error:", error);
+    res.status(500).json({ message: "Internal Server Error" });
   }
 };
