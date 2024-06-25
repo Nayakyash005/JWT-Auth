@@ -6,3 +6,4 @@ router.post("/register", registers);
 router.post("/login", login);
 
 export default router;
+

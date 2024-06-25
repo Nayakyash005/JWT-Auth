@@ -19,7 +19,7 @@ export const registers = async (req, res) => {
     console.error(error);
     return res
       .status(500)
-      .json({ message: "There is an error with the backend" });
+      .json({ message: "There is an unexpected error with the backend" });
   }
 };
 
